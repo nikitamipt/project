@@ -38,7 +38,7 @@
 using namespace sf;
 
 bool who = true; //рещает, будет ли тут ручное управление или нет.
-const int num_of_bots = 1;
+const int num_of_bots = 10;
 bool visual = true;
 
 void RunGame() {
