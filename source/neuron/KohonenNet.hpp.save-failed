@@ -1,0 +1,45 @@
+#ifndef KOHONENNET_H
+#define KOHONENNET_H
+
+#include <vector>
+
+
+#include "InputNeuron.hpp"
+#include "Neuron.hpp"
+
+//5 входов
+//4 средних
+//1 выход
+
+using namespace std;
+
+
+class KohonenNet{
+public:
+
+    std::vector<InputNeuron*> inNeurons;
+    std::vector<Neuron*> outNeurons;
+    std::vector<Neuron*> secNeurons;
+
+    KohonenNet() {
+        for (int i = 0; i < 5; i++) {
+            inNeurons.push_back(new InputNeuron());
+        }
+        for (int i = 0; i < 4; i++) {
+            secNeurons.push_back(new Neuron());
+        }
+        outNeurons.push_back(new Neuron());
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 5; j++) {
+                secNeurons[i]->dendrits.push_back(inNeurons[j]);
+                secNeurons[i]->weights.push_back(1.0);//rand()%10);
+            }
+        }
+        for (int i = 0; i < 5; i++) {
+            outNeurons[0]->dendrits.push_back(secNeurons[i]);
+            outNeurons[0]->weights.push_back((rand()%10));
+        }
+    }
+};
+
+#endif KOHONENNET_H

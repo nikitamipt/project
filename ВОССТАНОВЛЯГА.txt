@@ -1,0 +1,186 @@
+
+#ifndef GAME_H
+#define GAME_H
+
+
+
+#include <SFML/Graphics.hpp>
+#include <iostream>
+#include <ctime>
+#include <cmath>
+#include <vector>
+#include <list>
+
+#include <iostream>
+
+#include "Player1.hpp"
+#include "Entity.hpp"
+#include "Bullet.hpp"
+#include "Enemy.hpp"
+#include "Lines.hpp"
+#unclude "Driver.hpp"
+
+
+
+//#include <SFML/Audio.hpp>
+
+using namespace sf;
+
+bool who = false;
+
+
+// контролит текущие процессы игры
+class Map {
+public:
+    std::list<Entity*>  entities;   //какие объекты есть на карте (пули + боты)
+   
+    
+   
+//  "МИР" бота(ну или игрока) (что он знает о карте + его ходы) 
+class Bot :: Map {
+    
+void RunGame() {
+    RenderWindow window(VideoMode(480, 480), "SFML works!");
+
+    Texture t;
+    t.loadFromFile("Mario_Tileset.png");
+    Sprite tile(t);
+
+    Line L(t);
+    std::list<Entity*>::iterator it   //нужно для удобства в циклах
+
+ 
+    
+
+    Player p(t);
+    Enemy Enemy(t);
+
+    bool space = false; //контролит, нажат ли SPACE или нет. Надо для стрельбы, чтобы очереди не было
+
+    Clock clock; // чтобы скорость была привязана ко времени, а не к тактовой частоте процессора
+
+
+
+
+    while (window.isOpen()){
+
+
+        float time = clock.getElapsedTime().asMicroseconds();
+        time = time / 500; //дать прошедшее время.
+        if (time > 20) time = 20;
+        clock.restart(); //перезагружает время. Так мы измерим скорость такта.
+
+        Vector2i pixelPos = Mouse::getPosition(window);//забираем коорд курсора
+		Vector2f pos = window.mapPixelToCoords(pixelPos);//переводим их в игровые (уходим от коорд окна)
+		//std::cout << pixelPos.x << "\n";//смотрим на координату Х позиции курсора в консоли (она не будет больше ширины окна)
+		//std::cout << pos.x << "\n";//смотрим на Х,которая преобразовалась в мировые координаты
+
+
+        //событие закрытия окна (след несколько строк)
+        Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == Event::Closed)
+                window.close();
+        }
+        bool space1 = false;
+
+//здесь решаем, откуда идет управление игроком.
+        if (who) {
+            if (Keyboard::isKeyPressed(Keyboard::Right) or (Keyboard::isKeyPressed(Keyboard::D))) { p.da += 0.003;}
+            if (Keyboard::isKeyPressed(Keyboard::Left)  or (Keyboard::isKeyPressed(Keyboard::A))) { p.da -= 0.003; }
+            if (Keyboard::isKeyPressed(Keyboard::Up)    or (Keyboard::isKeyPressed(Keyboard::W))) { p.dsp = 1; }
+            if (Keyboard::isKeyPressed(Keyboard::Down)  or (Keyboard::isKeyPressed(Keyboard::S))) { p.dsp = -1; }
+            if (Keyboard::isKeyPressed(Keyboard::Space)) {space1 = true;}
+        } else {
+            p.da = Driver.da; p.dsp = Driver.dsp; space1 = Driver.space;
+        }
+
+
+        p.dx = p.dsp*cos(p.da); p.dy = p.dsp*sin(p.da);
+        p.dsp = 0;
+        if (space1) {
+            if (space == false) {
+                space = true;
+                float dx2 = pos.x-p.rect.left; float dy2 = pos.y - p.rect.top;
+                float m = sqrt(dx2*dx2 + dy2 * dy2);
+                entities.push_back(new Bullet(p.rect.left, p.rect.top, t, speed_bul*dx2/m, speed_bul*dy2/m));
+            }
+        } else { space = false;}
+
+
+
+
+        if (Keyboard::isKeyPressed(Keyboard::Escape)) {  window.close(); }
+
+        p.update(time);
+        Enemy.update(0);
+
+        for (it = entities.begin(); it != entities.end();){
+			Entity *b = *it;//для удобства, чтобы не писать (*it)->
+			b->update(time);//вызываем ф-цию update для всех объектов (по сути для тех, кто жив)
+			if (b->life == false)	{ it = entities.erase(it); delete b; }// если этот объект мертв, то удаляем его
+			else it++;//и идем курсором (итератором) к след объекту. так делаем со всеми объектами списка
+		}
+
+
+
+        if (p.rect.intersects(Enemy.rect) && Enemy.life) {
+            Enemy.life = false;
+        }
+        for (it = entities.begin(); it != entities.end(); it++){
+			if ((*it)->rect.intersects(Enemy.rect) && Enemy.life) {
+                Enemy.life = false;
+            }
+		}
+
+
+
+        window.clear(Color::White);
+
+        for (int i=0; i<H; i++) {
+			 for (int j=0; j<W; j++)
+			  {
+				if (TileMap[i][j]=='1')  tile.setTextureRect( IntRect(143-ZZ*3,112,ZZ,ZZ) );
+				if (TileMap[i][j]==' ') continue;
+
+  			    tile.setPosition(j*ZZ,i*ZZ) ;
+		        window.draw(tile);
+		     }
+        }
+        window.draw(Enemy.sprite);
+        window.draw(p.sprite);
+        
+        
+//РИСУЮ "ПРИЦЕЛ"
+        L.rect.left = p.rect.left; L.rect.top = p.rect.top + 4;
+        while (TileMap[int(L.rect.top/16)][int(L.rect.left/16)] == ' ') {
+            L.rect.left += 8 * cos(p.da); L.rect.top += 8 * sin(p.da); L.update(0);
+            window.draw(L.sprite);
+		}
+        L.rect.left = p.rect.left; L.rect.top = p.rect.top + 4;
+        while (TileMap[int(L.rect.top/16)][int(L.rect.left/16)] == ' ') {
+            L.rect.left += 8 * cos(p.da + 3.1415/2); L.rect.top += 8 * sin(p.da + 3.1415/2); L.update(0);
+            window.draw(L.sprite);
+		} L.rect.left = p.rect.left; L.rect.top = p.rect.top + 4;
+        while (TileMap[int(L.rect.top/16)][int(L.rect.left/16)] == ' ') {
+            L.rect.left += 8 * cos(p.da - 3.1415/2); L.rect.top += 8 * sin(p.da - 3.1415/2); L.update(0);
+            window.draw(L.sprite);
+		}
+
+
+
+        for (it = entities.begin(); it != entities.end(); it++){
+			window.draw((*it)->sprite);
+		}
+
+        window.display();
+
+
+    }
+
+
+}
+#endif GAME_H
+
+
+

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="projet" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/projet" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add library="sfml-graphics-d" />
+					<Add library="sfml-window-d" />
+					<Add library="sfml-system-d" />
+					<Add directory="sfml-graphics-d" />
+					<Add directory="sfml-window-d" />
+					<Add directory="sfml-system-d" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/projet" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="sfml-graphics" />
+					<Add library="sfml-window" />
+					<Add library="sfml-sustem" />
+					<Add directory="sfml-graphics" />
+					<Add directory="sfml-window" />
+					<Add directory="sfml-system" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-DSFML_STATIC" />
+			<Add directory="./include" />
+		</Compiler>
+		<Linker>
+			<Add directory="./lib" />
+		</Linker>
+		<Unit filename="foo.hpp" />
+		<Unit filename="main.cpp" />
+		<Unit filename="source/Bot.hpp" />
+		<Unit filename="source/Bullet.hpp" />
+		<Unit filename="source/Dijkstra.hpp" />
+		<Unit filename="source/Enemy.hpp" />
+		<Unit filename="source/Entity.hpp" />
+		<Unit filename="source/Game1.hpp" />
+		<Unit filename="source/Lines.hpp" />
+		<Unit filename="source/MapDrawer.hpp" />
+		<Unit filename="source/Person.hpp" />
+		<Unit filename="source/Player.hpp" />
+		<Unit filename="source/neuron/InputNeuron.hpp" />
+		<Unit filename="source/neuron/KohonenNet.hpp" />
+		<Unit filename="source/neuron/Neuron.hpp" />
+		<Unit filename="source/neuron/Worker.hpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
