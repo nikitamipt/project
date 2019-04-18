@@ -56,12 +56,12 @@ int Dijkstra(int x_start, int y_start) {
         result = checker(Map2, &q, kk1, 0, -1);if (result) break;
         q.pop();
 
-for (int i = 0; i < H; i++) {
+/*for (int i = 0; i < H; i++) {
     for (int j = 0; j < W; j++) {
         printf("%d", Map2[j + i*W]);
     }
     printf("\n");
-}
+}*/
 
     }
 
