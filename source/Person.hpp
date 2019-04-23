@@ -20,15 +20,21 @@ public:
     Person(int i) {}
 
     bool control(Vector2f pos) {
+
         bool space1 = false;
-        if (Keyboard::isKeyPressed(Keyboard::Right) or (Keyboard::isKeyPressed(Keyboard::D))) { da += 0.003; }
-        if (Keyboard::isKeyPressed(Keyboard::Left)  or (Keyboard::isKeyPressed(Keyboard::A))) { da -= 0.003; }
+        if (Keyboard::isKeyPressed(Keyboard::Right) or (Keyboard::isKeyPressed(Keyboard::D))) { da += 0.03; }
+        if (Keyboard::isKeyPressed(Keyboard::Left)  or (Keyboard::isKeyPressed(Keyboard::A))) { da -= 0.03; }
         if (Keyboard::isKeyPressed(Keyboard::Up)    or (Keyboard::isKeyPressed(Keyboard::W))) { dsp = 1; }
         if (Keyboard::isKeyPressed(Keyboard::Down)  or (Keyboard::isKeyPressed(Keyboard::S))) { dsp = -1; }
-        if (Keyboard::isKeyPressed(Keyboard::Space)) {space1 = true;}
+        if (Keyboard::isKeyPressed(Keyboard::Space) and (clock() - last_shot > 1000)) { //перезадрядка 1000милисек
+            space1 = true;
+            last_shot = clock();
+        }
+        else {space1 = false;}
+
         dx = dsp*cos(da); dy = dsp*sin(da); dsp = 0;
-        if (space1) {return true;}
-        return false;
+
+        return space1;
     }
 
 

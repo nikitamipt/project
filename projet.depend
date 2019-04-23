@@ -1043,13 +1043,15 @@
 	<sstream>
 	<fstream>
 
-1554396405 source:c:\users\nikita\desktop\мфти\4 семестр\инфа\проект\project_share\project\main.cpp
+1555868814 source:c:\users\nikita\desktop\мфти\4 семестр\инфа\проект\project_share\project\main.cpp
 	"source/Game1.hpp"
 	"foo.hpp"
 	"source/MapDrawer.hpp"
+	"source/Game_with_Runners.hpp"
+	"source/Game_war.hpp"
 	<SFML/Graphics.hpp>
 
-1555410336 c:\users\nikita\desktop\мфти\4 семестр\инфа\проект\project_share\project\source\game1.hpp
+1555945554 c:\users\nikita\desktop\мфти\4 семестр\инфа\проект\project_share\project\source\game1.hpp
 	<SFML/Graphics.hpp>
 	<iostream>
 	<ctime>
@@ -1482,10 +1484,10 @@
 	<SFML/Graphics/Drawable.hpp>
 	<SFML/Window/GlResource.hpp>
 
-1555228931 c:\users\nikita\desktop\мфти\4 семестр\инфа\проект\project_share\project\source\player.hpp
+1556028106 c:\users\nikita\desktop\мфти\4 семестр\инфа\проект\project_share\project\source\player.hpp
 	"Entity.hpp"
 
-1554290550 c:\users\nikita\desktop\мфти\4 семестр\инфа\проект\project_share\project\source\entity.hpp
+1555932914 c:\users\nikita\desktop\мфти\4 семестр\инфа\проект\project_share\project\source\entity.hpp
 	<iostream>
 	<ctime>
 	<cmath>
@@ -1494,7 +1496,7 @@
 	<iostream>
 	<SFML/Graphics.hpp>
 
-1554290569 c:\users\nikita\desktop\мфти\4 семестр\инфа\проект\project_share\project\source\bullet.hpp
+1555935652 c:\users\nikita\desktop\мфти\4 семестр\инфа\проект\project_share\project\source\bullet.hpp
 	"Entity.hpp"
 
 1554290575 c:\users\nikita\desktop\мфти\4 семестр\инфа\проект\project_share\project\source\enemy.hpp
@@ -1503,17 +1505,17 @@
 1553253908 c:\users\nikita\desktop\мфти\4 семестр\инфа\проект\project_share\project\source\lines.hpp
 	"Entity.hpp"
 
-1555410362 c:\users\nikita\desktop\мфти\4 семестр\инфа\проект\project_share\project\source\dijkstra.hpp
+1555926707 c:\users\nikita\desktop\мфти\4 семестр\инфа\проект\project_share\project\source\dijkstra.hpp
 	<queue>
 
-1554065067 c:\users\nikita\desktop\мфти\4 семестр\инфа\проект\project_share\project\source\person.hpp
+1556026444 c:\users\nikita\desktop\мфти\4 семестр\инфа\проект\project_share\project\source\person.hpp
 	"Player.hpp"
 
-1555229866 c:\users\nikita\desktop\мфти\4 семестр\инфа\проект\project_share\project\source\bot.hpp
+1555936941 c:\users\nikita\desktop\мфти\4 семестр\инфа\проект\project_share\project\source\bot.hpp
 	"Player.hpp"
 	"neuron/KohonenNet.hpp"
 
-1554525943 c:\users\nikita\desktop\мфти\4 семестр\инфа\проект\project_share\project\source\neuron\kohonennet.hpp
+1555879674 c:\users\nikita\desktop\мфти\4 семестр\инфа\проект\project_share\project\source\neuron\kohonennet.hpp
 	<vector>
 	<iomanip>
 	<fstream>
@@ -1543,7 +1545,7 @@
 	<iostream>
 	<SFML/Graphics.hpp>
 
-1555228434 c:\users\nikita\desktop\мфти\4 семестр\инфа\проект\project_share\project\source\mapdrawer.hpp
+1555879106 c:\users\nikita\desktop\мфти\4 семестр\инфа\проект\project_share\project\source\mapdrawer.hpp
 	<SFML/Graphics.hpp>
 	<iostream>
 	<ctime>
@@ -1556,4 +1558,59 @@
 	<fcntl.h>
 	<sstream>
 	<fstream>
+
+1555832731 source:c:\users\nikita\desktop\мфти\4 семестр\инфа\проект\project_share\project\source\game_with_runners.c
+
+1555940264 c:\users\nikita\desktop\мфти\4 семестр\инфа\проект\project_share\project\source\game_with_runners.hpp
+	<SFML/Graphics.hpp>
+	<iostream>
+	<ctime>
+	<cmath>
+	<vector>
+	<list>
+	<map>
+	<iostream>
+	"Player.hpp"
+	"Entity.hpp"
+	"Bullet.hpp"
+	"Enemy.hpp"
+	"Lines.hpp"
+	"Dijkstra.hpp"
+	"Person.hpp"
+	"Bot.hpp"
+	"Bot_stupid_runner.hpp"
+	<iostream>
+	<unistd.h>
+	<fcntl.h>
+	<sstream>
+	<fstream>
+	<string>
+
+1556027630 c:\users\nikita\desktop\мфти\4 семестр\инфа\проект\project_share\project\source\game_war.hpp
+	<SFML/Graphics.hpp>
+	<iostream>
+	<ctime>
+	<cmath>
+	<vector>
+	<list>
+	<map>
+	<iostream>
+	"Player.hpp"
+	"Entity.hpp"
+	"Bullet.hpp"
+	"Enemy.hpp"
+	"Lines.hpp"
+	"Dijkstra.hpp"
+	"Person.hpp"
+	"Bot.hpp"
+	<iostream>
+	<unistd.h>
+	<fcntl.h>
+	<sstream>
+	<fstream>
+	<string>
+
+1555926932 c:\users\nikita\desktop\мфти\4 семестр\инфа\проект\project_share\project\source\bot_stupid_runner.hpp
+	"Player.hpp"
+	"neuron/KohonenNet.hpp"
 

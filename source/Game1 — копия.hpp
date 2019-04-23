@@ -32,17 +32,16 @@
 #include <string>
 
 
-bool who = true; //рещает, будет ли тут ручное управление или нет.
-bool visual = true;
-const int num_of_bots = 10000;
-
 
 //#include <SFML/Audio.hpp>
 
 using namespace sf;
 
+bool who = true; //рещает, будет ли тут ручное управление или нет.
+const int num_of_bots = 10000;
+bool visual = true;
 
-void RunGame() {
+void RunGame1() {
 
 
 
@@ -140,13 +139,12 @@ void RunGame() {
 
         if (who) {
     //здесь происходит считываиние клавиатуры. p.control == true, если произошел выстрел.
-            int sp = p.control(pos);
-            if (sp && !space) {
+            if (p.control(pos) && !space) {
                 space = true;
                 float dx2 = pos.x-p.rect.left; float dy2 = pos.y - p.rect.top;
                 float m = sqrt(dx2*dx2 + dy2 * dy2);
-                entities.push_back(new Bullet(p.rect.left, p.rect.top, t, speed_bul*dx2/m, speed_bul*dy2/m, &p));
-            }
+                entities.push_back(new Bullet(p.rect.left, p.rect.top, t, speed_bul*dx2/m, speed_bul*dy2/m));
+            } else { space = false;}
         }
 
 //ВНИМАНИЕ ТУТ БОЛЬШОЙ ВОПРОС. Напиши b->update  !!!

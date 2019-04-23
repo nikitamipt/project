@@ -8,13 +8,11 @@ using namespace sf;
 
 
 
-
-
-
-
 class Bullet : public Entity {
 public:
-    Bullet(float x, float y, Texture &image, float _dx, float _dy) {
+    Player* owner; //хозяин пули. То есть тот, кто ее трульнул
+    Bullet(float x, float y, Texture &image, float _dx, float _dy, Player *_owner) {
+        owner = _owner;
         life = true;
         sprite.setTexture(image);  //сначала в sprite загружаю картину
         //sprite.setTextureRect(IntRect(0, 244, 40, 50)); // теперь я ограничиваю эту картинку заданными координатами

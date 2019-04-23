@@ -1,6 +1,7 @@
 
-#ifndef BOT_H
-#define BOT_H
+
+#ifndef RUNNER_H
+#define RUNNER_H
 
 
 #include "Player.hpp"
@@ -10,13 +11,15 @@
 using namespace sf;
 
 
-float dist[5] = {3.1415/2, 3.1415/4, 0, -3.1415/4, -3.1415/2};
+float dist1[5] = {3.1415/2, 3.1415/4, 0, -3.1415/4, -3.1415/2};
 
 
-int GetDistace1(int x, int y, float qqq, float da) {
+int GetDistace(int x, int y, float qqq, float da) {
     int s = 0;
+    if ((y/16 < 0) || (y/16 >= H) || (x/16 < 0) || (x/16 >=W)) {return s;}
     while (TileMap[int(y/16)][int(x/16)] == '0') {
         x += 8 * cos(da + qqq); y += 8 * sin(da + qqq); s++;
+        if ((y/16 < 0) || (y/16 >= H) || (x/16 < 0) || (x/16 >=W)) {return s;}
     }
    // printf("s = %d\n\n", s);
     return s;
@@ -24,16 +27,15 @@ int GetDistace1(int x, int y, float qqq, float da) {
 
 
 
-class Bot : public Player {
+class Runner : public Player {
 public:
     unsigned long long  int score;  //эта штука показывает, насколько далеко от стенок находился наш игрок
-    bool space;
     int dist_to_finish;
     KohonenNet Net;
     ofstream fout;
 
 // ЭТО КОСТЫЛЬ. КАК НЕ ПОВТОРЯТЬ ТОТ ЖЕ ТЕКСТ, что и PERSON
-    Bot(Texture &image, int x_start, int y_start) {
+    Runner(Texture &image, int x_start, int y_start) {
         sprite.setTexture(image);  //сначала в sprite загружаю картину
         rect = FloatRect(x_start * 16, y_start * 16,16,16);//текущие координаты, где я заспамлюсь
         sprite.setPosition(rect.left, rect.top);
@@ -41,16 +43,14 @@ public:
         dx = 0; dy = 0; da = 0;
         currentFrame = 0;
         score = 0;
-        space = false;
         dsp = 1; da = 0;
         life = true;
-        last_shot = 0;
     }
 
     bool control() {
         int score1 = 0;
         for (int i = 0; i < 5; i++) {
-            int sc = GetDistace1(rect.left + 8, rect.top + 8, dist[i], da);
+            int sc = GetDistace(rect.left + 8, rect.top + 8, dist1[i], da);
 //printf("%d ", sc);
             score1 += sc;
             Net.inNeurons[i]->value = sc;
@@ -61,10 +61,6 @@ public:
         if (da1 < -3.1415/2){da1 = -3.1415/2;} if (da1 > 3.1415/2) {da1 = 3.1415/2;}
         da += da1;
         dx = dsp*cos(da); dy = dsp*sin(da);
-        if (clock() - last_shot > 3000) { //перезадрядка 1000милисек
-            last_shot = clock();
-            return true;
-        }
         return false;
     }
 
@@ -72,5 +68,6 @@ public:
 
 
 
-#endif PLAYER_H
+#endif RUNNER_H
+
 
