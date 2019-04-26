@@ -1,6 +1,6 @@
 
-#ifndef GAME_H
-#define GAME_H
+#ifndef GAME_WAR_H
+#define GAME_WAR_H
 
 
 
@@ -23,7 +23,6 @@
 #include "Dijkstra.hpp"
 #include "Person.hpp"
 #include "Bot.hpp"
-//-31 -50 -8 -47 -48 4 33 -37 0 34 36 46 -49 -11 9 25 46 20 45 -23 -48 23 47 49
 #include <iostream>
 #include <unistd.h>
 #include <fcntl.h>
@@ -32,17 +31,16 @@
 #include <string>
 
 
-bool who = true; //рещает, будет ли тут ручное управление или нет.
-bool visual = true;
-const int num_of_bots = 10000;
-
 
 //#include <SFML/Audio.hpp>
 
 using namespace sf;
 
+// буду расчитывать из соображений, что на одного бота выходит bot_squre кв ед площади (не харомы, но и не общага в Долгопе)
+int bot_squre  = 5 * 5;
+int kol_bot = 1;//(H * W) / bot_squre;
 
-void RunGame() {
+void Game_war() {
 
 
 
@@ -61,7 +59,7 @@ void RunGame() {
 
 
     //читаю карту
-    ifstream f_map("map1.txt");
+    ifstream f_map("map_war.txt");
     for (int i = 0; i < H; i++) {
         std::string str;
         std::getline(f_map, str);
@@ -82,26 +80,24 @@ void RunGame() {
 
     Line L(t);  //нужно для рисования прицела и нахождний расстояний до стенок
 
-    //массив всех объектов карты (игрок, пули, прицел)
+    //массив всех объектов карты (прицел). Возможно, не нужен, пока хз
     std::list<Entity*>  entities;
+    std::list<Bullet*>  bullets; //массив пуль, которые есть на карте
     std::list<Bot*>  Bots_life;//здесь я храню живых ботов. Каждый такт я обновляю их текущее положение
     std::list<Bot*> Bots_death;//здесь я храню мертвых. Тех, что столкнулись со стеной. Когда все боты умирают, я выбираю из этого списка ботов бота, который оказался ближе всех к финишу.
     std::list<Entity*>::iterator it;
+    std::list<Entity*>::iterator it1;
     std::list<Bot*>::iterator Bbot;
- //   map <int, Bot*> Best_bots; //здесь будут хранится топ 5 процентов от ботов.
+    std::list<Bullet*>::iterator bul;
+    std::list<Bullet*>::iterator bul1;
 
     Person p(1);
     p.Player_maker(t, x_start, y_start);
 
-//НЕКРАСИВЫЙ КОСТЫЛЬ В СОЗДАНИИ. ЧТО ДЕЛАТЬ?
-    for (int i = 0; i < num_of_bots; i++) {
-        Bots_life.push_back(new Bot(t, x_start, y_start));
+    for (int i = 0; i < kol_bot; i++) {
+//всякие минусы поставлены для того, чтобы игрок рождался не в стенках карты
+        Bots_life.push_back(new Bot(t, rand()%(W - 2) + 1, rand()%(H - 2) + 1));
     }
-  /*  for (Bbot = Bots_life.begin(); Bbot != Bots_life.end();Bbot++){
-        (*Bbot)->Net.fGetKohonet(f_net_in);
-    }*/
-
-
 
 
     Enemy Enemy(t); //хрень, в которую я стреляю. типа мишень
@@ -122,7 +118,7 @@ void RunGame() {
         float time = clock.getElapsedTime().asMicroseconds();
         time = time / 500; //дать прошедшее время.
         if (time > 20) time = 20;
-    time = 20;
+    time = 2;
         clock.restart(); //перезагружает время. Так мы измерим скорость такта.
 
         Vector2i pixelPos = Mouse::getPosition(window);//забираем коорд курсора
@@ -140,16 +136,20 @@ void RunGame() {
 
         if (who) {
     //здесь происходит считываиние клавиатуры. p.control == true, если произошел выстрел.
-            int sp = p.control(pos);
-            if (sp && !space) {
-                space = true;
+printf("AAA\n");
+
+            if (p.control(pos)) {
+printf("AAA1\n");
+
                 float dx2 = pos.x-p.rect.left; float dy2 = pos.y - p.rect.top;
                 float m = sqrt(dx2*dx2 + dy2 * dy2);
-                entities.push_back(new Bullet(p.rect.left, p.rect.top, t, speed_bul*dx2/m, speed_bul*dy2/m, &p));
+                bullets.push_back(new Bullet(p.rect.left, p.rect.top, t, speed_bul*dx2/m, speed_bul*dy2/m, &p));
             }
+            p.update(time);
+printf("AAA2\n");
+
         }
 
-//ВНИМАНИЕ ТУТ БОЛЬШОЙ ВОПРОС. Напиши b->update  !!!
 
 
 //здесь я управляет бот! NO_HUMAN!
@@ -159,7 +159,11 @@ void RunGame() {
             qqq = true;
             if (next_generation) {qqq = false;}
             Bot *b = *Bbot;//для удобства, чтобы не писать (*it)->
-            b->control();
+
+            //здесь идет обработка стрельбы бота. ДА-ДА, у него есть пушка! гангста
+            if (b->control()) {
+                bullets.push_back(new Bullet(b->rect.left, b->rect.top, t, speed_bul*cos(b->da), speed_bul*sin(b->da), b));
+            }
             b->life = (b->update(time)); //бот умирает, как только столкнулся со стеной
         //если бот столкнулся со стеной, то "убиваем его", заносим в список мертвых ботов, считывая дистанцию до фининша.
             if ((b->life == false) || (next_generation))	{
@@ -168,7 +172,6 @@ void RunGame() {
                 b->life = false;
              //   if (b->dist_to_finish < best_dist) {best_dist = b->dist_to_finish;}
                 Bbot = Bots_life.erase(Bbot);
-
             }
             else Bbot++;//и идем курсором (итератором) к след объекту. так делаем со всеми объектами списка
 		}
@@ -199,12 +202,13 @@ void RunGame() {
             int rrr = -5; //первый ген будет без изменений. все последующие заменяться
             for (Bbot = Bots_death.begin(); Bbot != Bots_death.end();){
                 (*Bbot)->Net.mGetKohonet(mas_weights, rrr); rrr++;
-                (*Bbot)->rect.left = float(x_start * 16);
-                (*Bbot)->rect.top = float(y_start * 16);
+                (*Bbot)->rect.left = float((rand() % (W-2) + 1) * 16);
+                (*Bbot)->rect.top  = float((rand() % (H-2) + 1) * 16);
                 (*Bbot)->score = 0;
                 Bots_life.push_back(*Bbot);
                 Bbot = Bots_death.erase(Bbot);
             }
+
          /*   for (Bbot = Bots_life.begin(); Bbot != Bots_life.end();Bbot++){
                 (*Bbot)->Net.rSaveKohonet();
                 printf("\n");
@@ -230,27 +234,38 @@ void RunGame() {
 
 
 
-        if (who) {p.update(time);}
+
         Enemy.update(0);
 
+
 //обновляю текущее положение объектов карты (таких как пули, линии прицела)
-        for (it = entities.begin(); it != entities.end();){
-			Entity *b = *it;//для удобства, чтобы не писать (*it)->
+        for (bul = bullets.begin(); bul != bullets.end();){
+			Bullet *b = *bul;//для удобства, чтобы не писать (*it)->
 			b->update(time);//вызываем ф-цию update для всех объектов (по сути для тех, кто жив)
-			if (b->life == false)	{ it = entities.erase(it); delete b; }// если этот объект мертв, то удаляем его
-			else it++;//и идем курсором (итератором) к след объекту. так делаем со всеми объектами списка
+			if (b->life == false)	{ bul = bullets.erase(bul); delete b; }// если этот объект мертв, то удаляем его
+			else bul++;//и идем курсором (итератором) к след объекту. так делаем со всеми объектами списка
 		}
 
 
-//смотрю, не переклись ли два каких либо объекта на карту. intersects - наложены ли две картинки?
-        if (who) {if (p.rect.intersects(Enemy.rect) && Enemy.life) {
-            Enemy.life = false;
-        }}
-        for (it = entities.begin(); it != entities.end(); it++){
-			if ((*it)->rect.intersects(Enemy.rect) && Enemy.life) {
-                Enemy.life = false;
+//здесь происзодт обработка пуль. Пуля в пулю - дву пули погибают. Пуля в бота - оба помирают, к хозяину пули добавляется одно очко
+        for (bul = bullets.begin(); bul != bullets.end(); bul++){
+            for (bul1 = bullets.begin(); bul1 != bullets.end(); bul1++){
+                if (bul1 != bul && (*bul)->rect.intersects((*bul1)->rect) && (*bul)->life && (*bul1)->life) {
+                    (*bul)->life = false; (*bul1)->life = false;
+                }
             }
 		}
+
+printf("AAA33333\n");
+    for (bul1 = bullets.begin(); bul1 != bullets.end(); bul1++){
+            for (Bbot = Bots_life.begin(); Bbot != Bots_life.end(); Bbot++){
+                if ((*bul)->rect.intersects((*Bbot)->rect) && (*bul)->life && (*Bbot)->life && ((*bul)->owner != (*Bbot))) {
+                    // (*Bbot)->life = false;
+                    (*bul)->life = false;
+                }
+            }
+		}
+
 
 if (visual)  {
         window.clear(Color::White);
@@ -281,6 +296,8 @@ if (visual)  {
 
 
         for (it = entities.begin(); it != entities.end(); it++){ window.draw((*it)->sprite);}
+        for (bul = bullets.begin(); bul != bullets.end(); bul++){ window.draw((*bul)->sprite);}
+
 
         for (Bbot = Bots_life.begin(); Bbot != Bots_life.end(); Bbot++) {
             window.draw((*Bbot)->sprite);
@@ -299,7 +316,9 @@ if (visual)  {
 
 
 }
-#endif GAME_H
+#endif GAME_WAR_H
+
+
 
 
 

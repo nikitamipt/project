@@ -18,6 +18,7 @@ typedef struct kub_1 kub;
 
 
 int checker(int Map2[H*W], queue <kub> *q, kub kk1, int i, int j) {
+    if ((kk1.x + i >= W) || (kk1.x + i < 0) || (kk1.y + j < 0) || (kk1.y + j >= H)) {return 0;}
     if (Map2[(kk1.x + i) + W*(kk1.y + j)] == 0) {
        if (TileMap[kk1.y + j][kk1.x + i] == '0') {
             Map2[(kk1.x + i) + W*(kk1.y + j)] = 1;
@@ -56,12 +57,12 @@ int Dijkstra(int x_start, int y_start) {
         result = checker(Map2, &q, kk1, 0, -1);if (result) break;
         q.pop();
 
-for (int i = 0; i < H; i++) {
+/*for (int i = 0; i < H; i++) {
     for (int j = 0; j < W; j++) {
         printf("%d", Map2[j + i*W]);
     }
     printf("\n");
-}
+}*/
 
     }
 

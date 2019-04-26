@@ -16,7 +16,7 @@ const int mids = 3;   //3 средних
 const int outs = 1;    //1 выход
 
 int chislo = 10; //максимальный коэффициент весов
-
+int rnd_chislo = 5; //с веростостью 1/rnd_chislo происхожит замена
 using namespace std;
 
 
@@ -118,7 +118,7 @@ public:
         int q = 0;
         for (int i = 0; i < mids; i++) {
             for (int j = 0; j < inputs; j++) {
-                int w = rand()%3;//с вероятностью 50% происходит замена числа
+                int w = rand()%rnd_chislo;//с вероятностью 50% происходит замена числа
                 if ((w==0) && (rnd > 0)) {secNeurons[i]->weights[j] = rand()%chislo - chislo/2; }
                 else {secNeurons[i]->weights[j] = mas[q];}
                 q++;
@@ -126,7 +126,7 @@ public:
         }
         for (int j = 0; j < outs; j++) {
             for (int i = 0; i < mids; i++) {
-                int w = rand()%3;
+                int w = rand()%rnd_chislo;
                 if ((w == 0) && (rnd > 0)) {outNeurons[j]->weights[i]  = rand()%chislo - chislo/2; }
                 else {outNeurons[j]->weights[i] = mas[q]; }
                 q++;

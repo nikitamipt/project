@@ -56,10 +56,13 @@ void Draw() {
     ifstream fin;
     fin.open("map2.txt");
 
+    printf("To change range:\nR = 3\nT = 5\nY = 7\n");
+
 
 
     Clock clock; // чтобы скорость была прив€зана ко времени, а не к тактовой частоте процессора
 
+    int hhh = 1;
 
     while (window.isOpen()){
 
@@ -78,12 +81,18 @@ void Draw() {
         }
 
         if (Keyboard::isKeyPressed(Keyboard::Space)) {
-            for (int i = -1; i < 2; i++) {
-                for (int j = - 1; j < 2; j++) {
+            for (int i = -hhh; i <= hhh; i++) {
+                for (int j = - hhh; j <= hhh; j++) {
                     MapGame[int(pos.x/16) + i + (int(pos.y/16) + j) * W1] = 0;
                 }
             }
         }
+
+//Ўирина кисти, € не смог сделать напр€мую через цифры, поэтому написано черех жопу. как костыль сойдет))
+        if (Keyboard::isKeyPressed(Keyboard::R)) {hhh = 1;}
+        if (Keyboard::isKeyPressed(Keyboard::T)) {hhh = 2;}
+        if (Keyboard::isKeyPressed(Keyboard::Y)) {hhh = 4;}
+
         if (Keyboard::isKeyPressed(Keyboard::Z)) {
             MapGame[int(pos.x/16) + int(pos.y/16) * W1] = 1; //стенки
         }
